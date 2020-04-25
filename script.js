@@ -50,6 +50,68 @@ window.addEventListener('DOMContentLoaded', () => {
         interval();
     }
 
+    //Menu
+    const toogleMenu = () => {
+
+        const btnMenu = document.querySelector('.menu'),
+            menu = document.querySelector('menu'),
+            closeBtn = document.querySelector('.close-btn'),
+            menuItems = menu.querySelectorAll('ul>li');
+
+        const handlerMenu = () => {
+            menu.classList.toggle('active-menu');
+        };
+
+        btnMenu.addEventListener('click', handlerMenu);
+
+        closeBtn.addEventListener('click', handlerMenu);
+
+        menuItems.forEach(elem => elem.addEventListener('click', handlerMenu));
+    };
+
+    //Pop UP
+
+    const tooglePopup = () => {
+        const popup = document.querySelector('.popup'),
+            popupBtn = document.querySelectorAll('.popup-btn'),
+            popupClose = document.querySelector('.popup-close'),
+            popupContent = document.querySelector('.popup-content');
+        console.log(popup);
+
+        let animateInterval,
+            count = 0;
+        const animatePopup = function() {
+            animateInterval = requestAnimationFrame(animatePopup);
+            count++;
+            popup.style.display = 'block';
+            popupContent.style.left = `0%`;
+            popupContent.style.left = `${count}%`;
+            if (popupContent.style.left === `38%`) {
+                cancelAnimationFrame(animateInterval);
+            }
+        };
+
+        popupBtn.forEach(elem => {
+            elem.addEventListener('click', () => {
+                popupContent.style.left = `0`;
+                if (document.documentElement.clientWidth > 768) {
+                    animatePopup();
+                } else {
+                    popup.style.display = 'block';
+                }
+            });
+        });
+
+        popupClose.addEventListener('click', () => {
+            popup.style.display = 'none';
+            count = 0;
+        });
+
+
+    };
+
+    tooglePopup();
+    toogleMenu();
     countTimer('26 april 2020');
 
 });
