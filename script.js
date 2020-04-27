@@ -54,9 +54,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const toogleMenu = () => {
 
         const btnMenu = document.querySelector('.menu'),
-            menu = document.querySelector('menu'),
-            closeBtn = document.querySelector('.close-btn'),
-            menuItems = menu.querySelectorAll('ul>li');
+            menu = document.querySelector('menu');
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
@@ -64,9 +62,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
         btnMenu.addEventListener('click', handlerMenu);
 
-        closeBtn.addEventListener('click', handlerMenu);
-
-        menuItems.forEach(elem => elem.addEventListener('click', handlerMenu));
+        menu.addEventListener('click', (event) => {
+            let target = event.target;
+            if (target) {
+                handlerMenu();
+            }
+        });
     };
 
     //Pop UP
@@ -74,9 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const tooglePopup = () => {
         const popup = document.querySelector('.popup'),
             popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close'),
             popupContent = document.querySelector('.popup-content');
-        console.log(popup);
 
         let animateInterval,
             count = 0;
@@ -102,14 +101,59 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        popupClose.addEventListener('click', () => {
-            popup.style.display = 'none';
-            count = 0;
+        popup.addEventListener('click', (event) => {
+            let target = event.target;
+            if(target.classList.contains('.popup-close')) {
+                popup.style.display = 'none';
+                count = 0;
+            } else {
+                target = target.closest('.popup-content');
+                if (!target) {
+                    popup.style.display = 'none';
+                    count = 0;
+                }
+            }
+
         });
 
 
     };
 
+
+    // Tabs
+
+    const tabs = () => {
+        const tabHeader = document.querySelector('.service-header'),
+            tab = document.querySelectorAll('.service-header-tab'),
+            tabContent = document.querySelectorAll('.service-tab');
+
+        const toogleTabContent = index => {
+            for (let i = 0; i < tabContent.length; i++) {
+                if (index === i) {
+                    tab[i].classList.add('active');
+                    tabContent[i].classList.remove('d-none');
+                } else {
+                    tabContent[i].classList.add('d-none');
+                    tab[i].classList.remove('active');
+                }
+            }
+        };
+        tabHeader.addEventListener('click', event => {
+            let target = event.target;
+            target = target.closest('.service-header-tab');
+            console.log(target);
+            if (target) {
+                tab.forEach((elem, i) => {
+                    if (elem === target) {
+                        toogleTabContent(i);
+                    }
+                });
+            }
+
+        });
+    };
+
+    tabs();
     tooglePopup();
     toogleMenu();
     countTimer('26 april 2020');
