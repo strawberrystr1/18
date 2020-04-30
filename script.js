@@ -271,7 +271,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const images = document.querySelectorAll('.command__photo');
 
         images.forEach(item => {
-            let img = item.src;
+            const img = item.src;
             item.addEventListener('mouseenter', event => {
                 event.target.src = event.target.dataset.img;
             });
@@ -284,6 +284,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
     };
 
+    //calculate
+
+    const calcalute = () => {
+
+        const calcItems = document.querySelectorAll('input[type=number]');
+        console.log('calcItems: ', calcItems);
+       
+        calcItems.forEach((item) => {
+
+            item.removeAttribute('type');
+            item.addEventListener('input', () => {
+                item.value = item.value.replace(/\D/, '');
+            });
+    
+        });
+        
+
+
+    };
+
+    calcalute();
     commandChange();
     slider();
     tabs();
