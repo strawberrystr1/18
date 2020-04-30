@@ -160,9 +160,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const slide = document.querySelectorAll('.portfolio-item'),
             btn = document.querySelectorAll('.portfolio-btn'),
             portfolioDots = document.querySelector('.portfolio-dots');
-        
+
         const createLi = () => {
-            let li = document.createElement("li");
+            const li = document.createElement("li");
             li.classList.add('dot');
             portfolioDots.insertAdjacentElement("beforeend", li);
         };
@@ -211,10 +211,10 @@ window.addEventListener('DOMContentLoaded', () => {
         };
 
         slider.addEventListener('click', event => {
-            
+
             event.preventDefault();
 
-            let target = event.target;
+            const target = event.target;
 
             if (!target.matches('.portfolio-btn, .dot')) {
                 return;
@@ -248,13 +248,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
         });
 
-        slider.addEventListener('mouseover', (event) => {
+        slider.addEventListener('mouseover', event => {
             if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
                 stopSlide();
             }
         });
 
-        slider.addEventListener('mouseout', (event) => {
+        slider.addEventListener('mouseout', event => {
             if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
                 startSlide();
             }
@@ -264,6 +264,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
     };
 
+    //command
+
+    const commandChange = () => {
+
+        const images = document.querySelectorAll('.command__photo');
+
+        images.forEach(item => {
+            let img = item.src;
+            item.addEventListener('mouseenter', event => {
+                event.target.src = event.target.dataset.img;
+            });
+
+            item.addEventListener('mouseleave', () => {
+                event.target.src = img;
+            });
+        });
+
+
+    };
+
+    commandChange();
     slider();
     tabs();
     tooglePopup();
