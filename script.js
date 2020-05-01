@@ -323,7 +323,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const squareValue = +calcSquare.value;
 
             if (calcCount.value > 1) {
-                countValue += (calcCount.vqlue - 1) / 10;
+                countValue += (calcCount.value - 1) / 10;
             }
 
             if (calcDay.value && calcDay.value < 5) {
@@ -333,10 +333,21 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             if (typeValue && squareValue) {
-                total = price * typeValue * squareValue * countValue * dayValue;
+                total = Math.floor(price * typeValue * squareValue * countValue * dayValue);
             }
 
-            totalValue.textContent = total;
+            let animateTotal,
+                count = 0;
+            const animation = () => {
+                animateTotal = requestAnimationFrame(animation);
+                count += 5;
+                if (count !== total && total !== 0) {
+                    totalValue.textContent = count + 5;
+                } else {
+                    cancelAnimationFrame(animateTotal);
+                }
+            };
+            animation();
         };
 
         calcBlock.addEventListener('change', event => {
@@ -346,8 +357,6 @@ window.addEventListener('DOMContentLoaded', () => {
             target.matches('.calc-day') || target.matches('.calc-count')) {
                 countSum();
             }
-
-
         });
 
     };
