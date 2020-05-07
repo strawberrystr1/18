@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
             menu.classList.toggle('active-menu');
         };
 
-        // btnMenu.addEventListener('click', handlerMenu);
+        btnMenu.addEventListener('click', handlerMenu);
 
         menu.addEventListener('click', event => {
             const target = event.target;
@@ -76,7 +76,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const popup = document.querySelector('.popup'),
             popupBtn = document.querySelectorAll('.popup-btn'),
             popupContent = document.querySelector('.popup-content');
-
         let animateInterval,
             count = 0;
         const animatePopup = function() {
@@ -103,7 +102,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         popup.addEventListener('click', event => {
             let target = event.target;
-            if (target.classList.contains('.popup-close')) {
+            if (target.classList.contains('popup-close')) {
                 popup.style.display = 'none';
                 count = 0;
             } else {
@@ -289,7 +288,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const calcalute = () => {
 
         const calcItems = document.querySelectorAll('input[type=number]');
-        console.log('calcItems: ', calcItems);
 
         calcItems.forEach(item => {
 
@@ -314,7 +312,6 @@ window.addEventListener('DOMContentLoaded', () => {
             calcDay = document.querySelector('.calc-day'),
             calcCount = document.querySelector('.calc-count'),
             totalValue = document.getElementById('total');
-
         const countSum = () => {
             let total = 0,
                 countValue = 1,
@@ -361,7 +358,141 @@ window.addEventListener('DOMContentLoaded', () => {
 
     };
 
+    //send-ajax-form
 
+    const sendForm = () => {
+
+        const errorMessage = 'Что то пошло не так',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро свяжемся';
+
+        const form = document.getElementById('form1'),
+            formPopup = document.getElementById('form3'),
+            popupDiv = document.querySelector('.popup-content'),
+            formConnect = document.getElementById('form2'),
+            phone = document.querySelectorAll('.form-phone'),
+            name = document.querySelectorAll('.form-name'),
+            formConnectName = document.getElementById('form2-name'),
+            formConnectComment = document.getElementById('form2-message');
+
+
+        formConnect.addEventListener('input', () => {
+            let formConnectNameText = formConnectName.value
+            formConnectName.value = formConnectNameText.replace(/[^а-яё\s]/gi, '');
+            let formConnectCommentText = formConnectComment.value;
+            formConnectComment.value = formConnectCommentText.replace(/[^а-яё\s]/gi, '');
+        });
+        
+        
+
+        name.forEach(item => {
+            item.addEventListener('input', () => {
+                let text = item.value;
+                item.value = text.replace(/[^а-яё\s]/gi, '');
+            });
+        });
+
+        phone.forEach(item => {
+            item.addEventListener('input', () => {
+                let text = item.value;
+                item.value = text.replace(/[^\+\d]/g, '');
+            });
+        });
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem;';
+
+        const postData = (body, outputData, errorData, clear) => {
+            const request = new XMLHttpRequest();
+
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                    clear();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(body));
+        };
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+            const formData = new FormData(form);
+            const body = {};
+
+            for (const val of formData.entries()) {
+                body[val[0]] = val[1];
+            }
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+            }, error => {
+                statusMessage.textContent = errorMessage;
+                console.error();
+            }, () => {
+                for (const item of form) {
+                    item.value = '';
+                }
+            });
+
+
+        });
+
+        formPopup.addEventListener('submit', event => {
+            event.preventDefault();
+            statusMessage.style.color = 'white';
+            popupDiv.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+            const formData = new FormData(formPopup);
+            const body = {};
+
+            for (const val of formData.entries()) {
+                body[val[0]] = val[1];
+            }
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+            }, error => {
+                statusMessage.textContent = errorMessage;
+                console.error();
+            }, () => {
+                for (const item of formPopup) {
+                    item.value = '';
+                }
+            });
+        });
+
+        formConnect.addEventListener('submit', event => {
+            event.preventDefault();
+            formConnect.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+            const formData = new FormData(formConnect);
+            const body = {};
+
+            for (const val of formData.entries()) {
+                body[val[0]] = val[1];
+            }
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+            }, error => {
+                statusMessage.textContent = errorMessage;
+                console.error();
+            }, () => {
+                for (const item of formConnect) {
+                    item.value = '';
+                }
+            });
+        });
+
+
+    };
+    sendForm();
     calculator(100);
     calcalute();
     commandChange();
@@ -369,6 +500,6 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs();
     tooglePopup();
     toogleMenu();
-    countTimer('26 april 2020');
+    countTimer('08 may 2020');
 
 });
