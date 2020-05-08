@@ -377,24 +377,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
         formConnect.addEventListener('input', () => {
-            let formConnectNameText = formConnectName.value
+            const formConnectNameText = formConnectName.value;
             formConnectName.value = formConnectNameText.replace(/[^а-яё\s]/gi, '');
-            let formConnectCommentText = formConnectComment.value;
+            const formConnectCommentText = formConnectComment.value;
             formConnectComment.value = formConnectCommentText.replace(/[^а-яё\s]/gi, '');
         });
-        
-        
+
+
 
         name.forEach(item => {
             item.addEventListener('input', () => {
-                let text = item.value;
+                const text = item.value;
                 item.value = text.replace(/[^а-яё\s]/gi, '');
             });
         });
 
         phone.forEach(item => {
             item.addEventListener('input', () => {
-                let text = item.value;
+                const text = item.value;
                 item.value = text.replace(/[^\+\d]/g, '');
             });
         });
@@ -402,24 +402,23 @@ window.addEventListener('DOMContentLoaded', () => {
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem;';
 
-        const postData = (body, outputData, errorData, clear) => {
+        const postData = (body, clear) => new Promise((resolve, reject) => {
             const request = new XMLHttpRequest();
-
             request.addEventListener('readystatechange', () => {
                 if (request.readyState !== 4) {
                     return;
                 }
                 if (request.status === 200) {
-                    outputData();
+                    resolve();
                     clear();
                 } else {
-                    errorData(request.status);
+                    reject(request.status);
                 }
             });
             request.open('POST', './server.php');
             request.setRequestHeader('Content-Type', 'application/json');
             request.send(JSON.stringify(body));
-        };
+        });
 
         form.addEventListener('submit', event => {
             event.preventDefault();
@@ -431,18 +430,18 @@ window.addEventListener('DOMContentLoaded', () => {
             for (const val of formData.entries()) {
                 body[val[0]] = val[1];
             }
-            postData(body, () => {
-                statusMessage.textContent = successMessage;
-            }, error => {
-                statusMessage.textContent = errorMessage;
-                console.error();
-            }, () => {
+            postData(body,  () => {
                 for (const item of form) {
                     item.value = '';
                 }
-            });
-
-
+            })
+                .then(() => {
+                    statusMessage.textContent = successMessage;
+                })
+                .catch(error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error();
+                });
         });
 
         formPopup.addEventListener('submit', event => {
@@ -457,15 +456,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 body[val[0]] = val[1];
             }
             postData(body, () => {
-                statusMessage.textContent = successMessage;
-            }, error => {
-                statusMessage.textContent = errorMessage;
-                console.error();
-            }, () => {
                 for (const item of formPopup) {
                     item.value = '';
                 }
-            });
+            }).then(() => {
+                statusMessage.textContent = successMessage;
+            })
+                .catch(error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error();
+                });
         });
 
         formConnect.addEventListener('submit', event => {
@@ -478,16 +478,18 @@ window.addEventListener('DOMContentLoaded', () => {
             for (const val of formData.entries()) {
                 body[val[0]] = val[1];
             }
-            postData(body, () => {
-                statusMessage.textContent = successMessage;
-            }, error => {
-                statusMessage.textContent = errorMessage;
-                console.error();
-            }, () => {
+            postData(body,  () => {
                 for (const item of formConnect) {
                     item.value = '';
                 }
-            });
+            })
+                .then(() => {
+                    statusMessage.textContent = successMessage;
+                })
+                .catch(error => {
+                    statusMessage.textContent = errorMessage;
+                    console.error();
+                });
         });
 
 
@@ -500,6 +502,6 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs();
     tooglePopup();
     toogleMenu();
-    countTimer('08 may 2020');
+    countTimer('09 may 2020');
 
 });

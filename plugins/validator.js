@@ -5,7 +5,11 @@ class Validator {
         this.form = document.querySelector(selector);
         this.pattern = pattern;
         this.method = method;
-        this.elementsForm = [...this.form.elemests].filter(item =>  item.tagName.toLowercase() !== 'button' && item.type !== 'button');
+        this.elementsForm = [...this.form.elements].filter(item => {
+            return item.tagName !== 'BUTTON' &&
+            item.type !== 'button' });
+        console.log(this.elementsForm);
+    
         this.error = new Set();
     }
 
@@ -16,7 +20,7 @@ class Validator {
         this.form.addEventListener('submit', e => {
             e.preventDefault();
             this.elementsForm.forEach(elem => {
-                this.checkIt({target: elem});
+                this.checkIt({ target: elem });
             });
             if (this.error.size) {
                 e.preventDefault();
@@ -54,6 +58,8 @@ class Validator {
 
     checkIt(event) {
         const target = event.target;
+        
+        console.log('target: ', target);
         if (this.isValid(target)) {
             this.showSuccess(target);
             this.error.delete(target);
@@ -87,15 +93,15 @@ class Validator {
         const  style = document.createElement('style');
         style.textContent = `
         input.success {
-            border: 2px solid green
+            border: 2px solid green;
         }
         input.error {
-            border: 2px solid red
+            border: 2px solid red;
         }
         .validator-error {
             font-size: 12px;
             font-family: sans-serif;
-            color: red
+            color: red;
         }
         `;
         document.head.appendChild(style);
