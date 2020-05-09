@@ -402,23 +402,14 @@ window.addEventListener('DOMContentLoaded', () => {
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem;';
 
-        const postData = (body, clear) => new Promise((resolve, reject) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    resolve();
-                    clear();
-                } else {
-                    reject(request.status);
-                }
+        const postData = (body, clear) =>
+            fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
             });
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            request.send(JSON.stringify(body));
-        });
 
         form.addEventListener('submit', event => {
             event.preventDefault();
@@ -435,12 +426,15 @@ window.addEventListener('DOMContentLoaded', () => {
                     item.value = '';
                 }
             })
-                .then(() => {
+                .then(response => {
+                    if (response.status !== 200) {
+                        throw new Error('Status network not 200');
+                    }
                     statusMessage.textContent = successMessage;
                 })
                 .catch(error => {
                     statusMessage.textContent = errorMessage;
-                    console.error();
+                    console.error(error);
                 });
         });
 
@@ -459,12 +453,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 for (const item of formPopup) {
                     item.value = '';
                 }
-            }).then(() => {
-                statusMessage.textContent = successMessage;
             })
+                .then(response => {
+                    if (response.status !== 200) {
+                        throw new Error('Status network not 200');
+                    }
+                    statusMessage.textContent = successMessage;
+                })
                 .catch(error => {
                     statusMessage.textContent = errorMessage;
-                    console.error();
+                    console.error(error);
                 });
         });
 
@@ -483,12 +481,15 @@ window.addEventListener('DOMContentLoaded', () => {
                     item.value = '';
                 }
             })
-                .then(() => {
+                .then(response => {
+                    if (response.status !== 200) {
+                        throw new Error('Status network not 200');
+                    }
                     statusMessage.textContent = successMessage;
                 })
                 .catch(error => {
                     statusMessage.textContent = errorMessage;
-                    console.error();
+                    console.error(error);
                 });
         });
 
@@ -502,6 +503,6 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs();
     tooglePopup();
     toogleMenu();
-    countTimer('09 may 2020');
+    countTimer('10 may 2020');
 
 });
