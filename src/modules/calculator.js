@@ -31,9 +31,9 @@ const calculator = (price = 100) => {
             count = 0;
         const animation = () => {
             animateTotal = requestAnimationFrame(animation);
-            count += 5;
+            count += 100;
             if (count !== total && total !== 0) {
-                totalValue.textContent = count + 5;
+                totalValue.textContent = count + 100;
             } else {
                 cancelAnimationFrame(animateTotal);
             }
