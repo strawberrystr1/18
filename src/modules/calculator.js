@@ -29,16 +29,36 @@ const calculator = (price = 100) => {
 
         let animateTotal,
             count = 0;
-        const animation = () => {
-            animateTotal = requestAnimationFrame(animation);
-            count += 100;
-            if (count !== total && total !== 0) {
-                totalValue.textContent = count + 100;
-            } else {
-                cancelAnimationFrame(animateTotal);
-            }
-        };
-        animation();
+        // const animation = () => {
+        //     animateTotal = requestAnimationFrame(animation);
+        //     count += 100;
+        //     if (count !== total && total !== 0) {
+        //         totalValue.textContent = count + 100;
+        //     } else {
+        //         cancelAnimationFrame(animateTotal);
+        //     }
+        // };
+        // animation();
+
+        
+            animateTotal = setInterval(() => {
+                    count += 100;
+                if (count !== total && total !== 0) {
+                    totalValue.textContent = count + 100;
+                } else {
+                    clearInterval(animateTotal);
+                }
+            }, 1);
+            
+            calcBlock.addEventListener('change', event => {
+                const target = event.target;
+        
+                if (target.matches('.calc-type') || target.matches('.calc-square') ||
+                target.matches('.calc-day') || target.matches('.calc-count')) {
+                    clearInterval(animateTotal);
+                }
+            });
+        
     };
 
     calcBlock.addEventListener('change', event => {
